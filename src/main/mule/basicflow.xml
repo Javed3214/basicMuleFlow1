@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="basicflowFlow" doc:id="ee12ea75-07cc-427a-99d7-237ed397ed1b" >
+		<http:listener doc:name="Listener" doc:id="8dcf9b3c-f2b8-4dd5-945f-ad18674082d6" config-ref="HTTP_Listener_config" path="/flow"/>
+		<ee:transform doc:name="Transform Message" doc:id="06998eac-ef9d-425c-acd4-404290189803" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="basicflowFlow2" doc:id="96beced4-b828-4534-ac56-80b0111ff779" >
+		<http:listener doc:name="Listener" doc:id="dd19f31f-7b6a-449a-b199-f579d3a5ee91" config-ref="HTTP_Listener_config" path="/flow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="7b65101c-8831-4f8e-b335-74c87d10080b" name="basicflowSub_Flow"/>
+		<ee:transform doc:name="Transform Message" doc:id="25ae8470-d41e-4e83-9ddc-afdbe939dddf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	subflow: vars.flow
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="basicflowSub_Flow" doc:id="b4145ae0-edaa-4ae9-a6ae-33eed8d3f121" >
+		<set-variable value="subflow working through flow refrence" doc:name="Set Variable" doc:id="a1217908-d423-44b1-9764-778e1323bf77" variableName="flow"/>
+	</sub-flow>
+</mule>
